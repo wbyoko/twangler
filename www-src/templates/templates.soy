@@ -1,0 +1,70 @@
+{namespace twangler.templates}
+
+/**
+ * @param defaultQuery
+ */
+{template .frame}
+	<div class="{css twangler-body}">
+		<div class="{css twangler-header}">
+			<h3 class="{css header-label-front}">Twangler</h3>
+			<input class="{css header-input}" type="text" value="{$defaultQuery}">
+			<button class="{css header-sumbit}">Update</button>
+			<h3 class="{css header-label-back}"><a target="_blank" title="wbyoko's Twitter Page" href="http://twitter.com/wbyoko">@wbyoko</a></h3>
+		</div>
+		<div class="{css twangler-cloud}"></div>
+		<div class="{css twangler-selected}">
+			<div class="{css selected-form}">
+				<input class="{css selected-input}" type="text" placeholder="Add Manually">
+				<button class="{css selected-sumbit}">Add</button>
+			</div>
+		</div>
+		<div class="{css twangler-stream}"></div>
+	</div>
+{/template}
+
+/**
+ * @param tweet
+ */
+{template .tweetView}
+	<div class="{css twangler-tweet} tweet{$tweet.id}" style="background-color:{$tweet.color}; color:{$tweet.contrast};">
+		<a target="_blank" title="{$tweet.user}'s Twitter Page" href="http://twitter.com/{$tweet.user}">
+			<img class="{css tweet-image}" src="{$tweet.img}">
+		</a>
+		<p class="{css tweet-text}">{$tweet.text |noAutoescape}</p>
+		<b class="{css tweet-user}">{$tweet.user}</b>
+		<b class="{css tweet-date}" data-time="{$tweet.time}">{$tweet.str_time}</b>
+	</div>
+{/template}
+
+/**
+ * @param cloud
+ */
+{template .cloudView}
+	<div class="{css cloud-users}">
+		{foreach $word in $cloud.users}
+			<div class="{css cloud-item}">{$word}</div>
+		{/foreach}
+	</div>
+	<div class="{css cloud-hashtags}">
+		{foreach $word in $cloud.hashtags}
+			<div class="{css cloud-item}">{$word}</div>
+		{/foreach}
+	</div>
+	<div class="{css cloud-phrases}">
+		{foreach $word in $cloud.phrases}
+			<div class="{css cloud-item}">{$word}</div>
+		{/foreach}
+	</div>
+{/template}
+
+/**
+ * @param item
+ * @param color
+ * @param contrast
+ * @param id
+ */
+{template .selectedItem}
+	<div id="{$id}" class="{css selected-item}" style="background-color:{$color}; color:{$contrast};">{$item}</div>
+{/template}
+
+/* End of templates.soy */

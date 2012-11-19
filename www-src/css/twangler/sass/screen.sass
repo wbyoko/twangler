@@ -1,0 +1,138 @@
+@import blueprint/reset
+//@import blueprint/grid
+//@import zen
+//@import partials/base
+//@import blueprint
+//@import blueprint/buttons
+//@import blueprint/scaffolding
+//@import compass/utilities/general/clearfix
+//
+@import library/grid.scss
+
+@import library/mixins.scss
+
+@import compass/css3/border-radius
+@import compass/typography/links/link-colors
+
+
+// To generate css equivalent to the blueprint css but with your
+// configuration applied, uncomment:
+// @include blueprint
+// @see http://semantic.gs/
+
+// Zen Defaults
+$columns: 12
+$column-width: 60
+$gutter-width: 20
+$total-width: 100%
+
+body
+	background: #2F2F2F
+	color: #C6C6C6
+	a
+		+link-colors(#00c, #0cc, #c0c, #ccc, #cc0)
+
+
+%twangler-box
+	+border-radius
+	padding: 2px 0
+
+@mixin twangler-margin-top
+	margin-top: 5px
+
+//.twangler-body
+
+.twangler-header
+	+twangler-margin-top
+
+.header-label-front
+	+column(2)
+	+push(1)
+
+.header-input
+	+column(3)
+
+.header-sumbit
+	+column(1)
+
+.header-label-back
+	+column(2)
+	+push(2)
+
+.twangler-cloud
+	+column(12)
+
+.cloud-users,
+.cloud-hashtags,
+.cloud-phrases
+	+row(12)
+
+.cloud-item
+	@extend %twangler-box
+	+column(2,12)
+	+twangler-margin-top
+	color: white
+	text-align: center
+	background-color: black
+
+.twangler-selected
+	+column(4)
+
+.selected-form
+	+row(4)
+	@extend %twangler-box
+	+twangler-margin-top
+	text-align: center
+
+.selected-input
+	+column(3,4)
+	margin-right: 0
+
+.selected-sumbit
+	+column(1,4)
+
+.selected-item
+	@extend %twangler-box
+	@extend %clearfix
+	+twangler-margin-top
+	text-align: center
+
+.twangler-stream
+	+column(8)
+
+.twangler-tweet
+	@extend %twangler-box
+	@extend %clearfix
+	+twangler-margin-top
+
+.tweet-image
+	margin: 6px
+	width: 48px
+	height: 48px
+	float: left
+	background: black
+	border-top: 1px solid #333
+	border-left: 1px solid #333
+	border-bottom: 1px solid #666
+	border-right: 1px solid #666
+
+.tweet-user,
+.tweet-date
+	padding: 6px
+
+.tweet-text
+	padding: 6px
+	line-height: 16px
+	margin-left: 60px
+	font-size: 100%
+
+// small devices
+@media screen and (max-device-width: 480px)
+	.cloud-item,
+	.selected-item
+		+column(4)
+	.twangler-selected,
+	.twangler-stream
+		+column(12)
+
+// End of screen.sass

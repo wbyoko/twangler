@@ -1,0 +1,6 @@
+.new-tweets,
+.cloud-updated,
+.query-updated
+{
+	text-transform : none;
+}
