@@ -1,6 +1,9 @@
 .new-tweets,
 .cloud-updated,
-.query-updated
+.query-updated,
+.clear-show-update-buttons-bind-pause-submit-streams,
+.query-bgcolor-color-body-users-hashtags-phrases,
+.twangler_stream
 {
 	text-transform : none;
 }

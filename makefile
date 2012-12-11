@@ -1,5 +1,7 @@
-#compress-js-simple compress-js-advanced
-all: html css compress-js-simple compress-js-advanced
+#compress-js-simple compress-js-advanced deploy-local deploy-prod
+all: deploy-prod
+
+deploy-local: html css compress-js-advanced
 	@echo "Copying temp files into www folder"
 	@mkdir -p www
 	@cp tmp/html/* www
@@ -7,6 +9,45 @@ all: html css compress-js-simple compress-js-advanced
 	@cp tmp/css/*.css www/css
 	@mkdir -p www/js
 	@cp tmp/js/*.js www/js
+
+deploy-local-plus: deploy-local
+	@rm -rf www/twangler.html
+	@php www-src/php/index.php >> www/twangler.html
+
+deploy-prod: deploy-local-plus
+	@scp www/twangler.html wbagayok@wbyoko.com:/home6/wbagayok/public_html/twangler/index.html
+
+styling: html css js-compiled
+	@echo "Copying temp files into www folder"
+	@mkdir -p www
+	@cp tmp/html/* www
+	@mkdir -p www/css
+	@cp tmp/css/*.css www/css
+	@mkdir -p www/js
+	@cp tmp/js/*.js www/js
+	@open www/index.n.html
+	@echo "Build Complete"
+
+debug: html css compress-js-simple
+	@echo "Copying temp files into www folder"
+	@mkdir -p www
+	@cp tmp/html/* www
+	@mkdir -p www/css
+	@cp tmp/css/*.css www/css
+	@mkdir -p www/js
+	@cp tmp/js/*.js www/js
+	@open www/index.d.html
+
+prod: html css compress-js-advanced
+	@echo "Copying temp files into www folder"
+	@mkdir -p www
+	@cp tmp/html/* www
+	@mkdir -p www/css
+	@cp tmp/css/*.css www/css
+	@mkdir -p www/js
+	@cp tmp/js/*.js www/js
+	@open www/index.c.html
+	@echo "Build Complete"
 
 clean:
 	@rm -rf tmp www
@@ -21,7 +62,7 @@ compress-js-advanced: js-compiled
 		--warning_level VERBOSE \
 		--js tmp/js/main.js \
 		--js closure/library/closure/goog/deps.js \
-		--js tmp/css/renaming_map.js \
+		--js tmp/css/renaming_map.c.js \
 		--externs www-src/externs/application.js \
 		--js_output_file tmp/js/main.xmin.js \
 		--compilation_level ADVANCED_OPTIMIZATIONS
@@ -33,7 +74,7 @@ compress-js-simple: js-compiled
 		--warning_level VERBOSE \
 		--js tmp/js/main.js \
 		--js closure/library/closure/goog/deps.js \
-		--js tmp/css/renaming_map.js \
+		--js tmp/css/renaming_map.d.js \
 		--formatting=pretty_print \
 		--formatting=print_input_delimiter \
 		--externs www-src/externs/application.js \
@@ -73,20 +114,56 @@ css:
 	@compass compile www-src/css/twangler www-src/css/twangler/sass/screen.sass
 	@echo "css, symbols to renaming map"
 	@java -jar closure/stylesheets/closure-stylesheets.jar \
+		--allowed-unrecognized-property -webkit-overflow-scrolling \
 		--allowed-unrecognized-property -ms-border-radius \
 		--allowed-unrecognized-property -o-border-radius \
+		--allowed-non-standard-function color-stop \
+		--allowed-non-standard-function progid:DXImageTransform.Microsoft.Alpha \
     	--output-renaming-map-format CLOSURE_COMPILED \
 		-o tmp/css/temp.tcss \
     	--rename CLOSURE \
-    	--output-renaming-map tmp/css/renaming_map.js \
+    	--output-renaming-map tmp/css/renaming_map.c.js \
+		www-src/css/twangler/stylesheets/screen.css \
+		www-src/css/symbols/symbols.gss
+	@java -jar closure/stylesheets/closure-stylesheets.jar \
+		--allowed-unrecognized-property -webkit-overflow-scrolling \
+		--allowed-unrecognized-property -ms-border-radius \
+		--allowed-unrecognized-property -o-border-radius \
+		--allowed-non-standard-function color-stop \
+		--allowed-non-standard-function progid:DXImageTransform.Microsoft.Alpha \
+    	--output-renaming-map-format CLOSURE_COMPILED \
+		-o tmp/css/temp.tcss \
+    	--rename DEBUG \
+    	--output-renaming-map tmp/css/renaming_map.d.js \
 		www-src/css/twangler/stylesheets/screen.css \
 		www-src/css/symbols/symbols.gss
 	@echo "main.gss to css"
 	@java -jar closure/stylesheets/closure-stylesheets.jar \
-		-o tmp/css/main.css \
+		-o tmp/css/main.c.css \
     	--rename CLOSURE \
+		--allowed-unrecognized-property -webkit-overflow-scrolling \
 		--allowed-unrecognized-property -ms-border-radius \
 		--allowed-unrecognized-property -o-border-radius \
+		--allowed-non-standard-function color-stop \
+		--allowed-non-standard-function progid:DXImageTransform.Microsoft.Alpha \
+		www-src/css/twangler/stylesheets/screen.css
+	@java -jar closure/stylesheets/closure-stylesheets.jar \
+		-o tmp/css/main.d.css \
+    	--rename DEBUG \
+		--allowed-unrecognized-property -webkit-overflow-scrolling \
+		--allowed-unrecognized-property -ms-border-radius \
+		--allowed-unrecognized-property -o-border-radius \
+		--allowed-non-standard-function color-stop \
+		--allowed-non-standard-function progid:DXImageTransform.Microsoft.Alpha \
+		www-src/css/twangler/stylesheets/screen.css
+	@java -jar closure/stylesheets/closure-stylesheets.jar \
+		-o tmp/css/main.n.css \
+    	--rename NONE \
+		--allowed-unrecognized-property -webkit-overflow-scrolling \
+		--allowed-unrecognized-property -ms-border-radius \
+		--allowed-unrecognized-property -o-border-radius \
+		--allowed-non-standard-function color-stop \
+		--allowed-non-standard-function progid:DXImageTransform.Microsoft.Alpha \
 		www-src/css/twangler/stylesheets/screen.css
 
 # Copy HTML files into compiled directory

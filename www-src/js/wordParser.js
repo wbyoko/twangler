@@ -72,10 +72,12 @@ twangler.wordParser = function (text) {
 			return 1;
 
 		//must have same freq; compare length
+		/*
 		if (a.word.length < b.word.length)
 			return -1;
 		if (a.word.length > b.word.length)
 			return 1;
+		// */
 
 		//whatever
 		return 0;
@@ -83,9 +85,9 @@ twangler.wordParser = function (text) {
 
 	//console.log(text);
 
-	var stopwords = ["that","this","&lt;","&gt;","just","the","and","for","&amp;","plz?","can","was","que","now","you","see"], //make all lowercase
+	var stopwords = "that this &lt; &gt; just the and for &amp; plz can was que now you see are with any had off they there but his one than two three have has why what i'm via still".toLowerCase().split(" "),
 
-		words = text.replace(/["”“]/gi,' ').replace(/’/g,"'").replace(/#/gi,' #').replace(/[):,"?!']\s/gi,' ').replace(/\s[(:,"?!']/gi,' ').replace(/[\s\.]{2,}/gi,' ').split(' '),
+		words = text.replace(/["”“]/gi,' ').replace(/’/g,"'").replace(/#/gi,' #').replace(/[):,"?!'\]]\s/gi,' ').replace(/\s[(:,"?!'\[]/gi,' ').replace(/[\s\.]{2,}/gi,' ').split(' '),
 
 		wordcount = {},
 
@@ -117,7 +119,7 @@ twangler.wordParser = function (text) {
 	// include only words repeated more than once within the paragraph
 	// if (i > 1 || w.lastIndexOf('#', 0) === 0 || w.lastIndexOf('@', 0) === 0)
 	for (i in wordcount) {
-		if (wordcount[i] > 1 && i.length > 2)
+		if (wordcount[i] > 0 && i.length > 2)
 			topwords.push(new twangler.word(i, wordcount[i]));
 	}
 

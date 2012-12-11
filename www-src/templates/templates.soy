@@ -6,16 +6,65 @@
 {template .frame}
 	<div class="{css twangler-body}">
 		<div class="{css twangler-header}">
+			<div class="{css header-icon}">
+				<i class="icon-camera-retro"></i>
+			</div>
 			<h3 class="{css header-label-front}">Twangler</h3>
 			<input class="{css header-input}" type="text" value="{$defaultQuery}">
-			<button class="{css header-sumbit}">Update</button>
-			<h3 class="{css header-label-back}"><a target="_blank" title="wbyoko's Twitter Page" href="http://twitter.com/wbyoko">@wbyoko</a></h3>
+			<div class="{css header-buttons}">
+				<div class="{css header-button}">
+					<span class="{css btn} {css twangler-cloud-update}">
+						<i class="icon-refresh {css header-update-icon}"></i>
+					</span>
+				</div>
+				<div class="{css header-button}">
+					<span class="{css btn} {css twangler-cloud-bind} {css twangler-icon-active}">
+						<i class="icon-pushpin"></i>
+					</span>
+				</div>
+				<div class="{css header-button}">
+					<span class="{css btn} {css twangler-cloud-pause}">
+						<i class="icon-pause"></i>
+					</span>
+				</div>
+				<div class="{css header-button}">
+					<span class="{css btn} {css twangler-header-stream-clear}">
+						<i class="icon-trash"></i>
+					</span>
+				</div>
+				<div class="{css header-button}">
+					<span class="{css btn} {css twangler-cloud-show} {css twangler-icon-active}">
+						<i class="icon-cloud"></i>
+					</span>
+				</div>
+			</div>
+			<h3 class="{css header-label-back}">
+				<a target="_blank" href="http://twitter.com/wbyoko">
+					<i class="icon-twitter"></i>
+				</a>
+			</h3>
 		</div>
 		<div class="{css twangler-cloud}"></div>
 		<div class="{css twangler-selected}">
 			<div class="{css selected-form}">
 				<input class="{css selected-input}" type="text" placeholder="Add Manually">
-				<button class="{css selected-sumbit}">Add</button>
+				<div class="{css selected-buttons}">
+					<div class="{css selected-button}">
+						<span class="{css btn} {css selected-submit}">
+							<i class="icon-plus"></i>
+						</span>
+					</div>
+					<div class="{css selected-button}">
+						<span class="{css btn} {css twangler-stream-pause}">
+							<i class="icon-pause"></i>
+						</span>
+					</div>
+					<div class="{css selected-button}">
+						<span class="{css btn} {css twangler-stream-clear}">
+							<i class="icon-trash"></i>
+						</span>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="{css twangler-stream}"></div>
@@ -24,15 +73,20 @@
 
 /**
  * @param tweet
+ * @param str_time
  */
 {template .tweetView}
-	<div class="{css twangler-tweet} tweet{$tweet.id}" style="background-color:{$tweet.color}; color:{$tweet.contrast};">
-		<a target="_blank" title="{$tweet.user}'s Twitter Page" href="http://twitter.com/{$tweet.user}">
+	<div class="{css twangler-tweet} {css tweet}{$tweet.id} {css stream}{$tweet.stream_id}">
+		<a onClick="return asp('@{$tweet.user}');" target="_blank" href="http://twitter.com/{$tweet.user}">
 			<img class="{css tweet-image}" src="{$tweet.img}">
 		</a>
 		<p class="{css tweet-text}">{$tweet.text |noAutoescape}</p>
-		<b class="{css tweet-user}">{$tweet.user}</b>
-		<b class="{css tweet-date}" data-time="{$tweet.time}">{$tweet.str_time}</b>
+		<b class="{css tweet-user}">
+			<a onClick="return asp('@{$tweet.user}');" target="_blank" href="http://twitter.com/{$tweet.user}">
+				{$tweet.user}
+			</a>
+		</b>
+		<b class="{css tweet-date}" data-time="{$tweet.unix}">{$str_time}</b>
 	</div>
 {/template}
 
@@ -59,12 +113,37 @@
 
 /**
  * @param item
- * @param color
- * @param contrast
- * @param id
+ * @param streamId
  */
 {template .selectedItem}
-	<div id="{$id}" class="{css selected-item}" style="background-color:{$color}; color:{$contrast};">{$item}</div>
+	<div id="{$streamId}" class="{css selected-item} {css stream}{$streamId}">{$item}</div>
+{/template}
+
+/**
+ * @param streamId
+ * @param startColor
+ * @param textColor
+ * @param? endColor
+ * @param? borderColor
+ */
+{template .streamStyles}
+	{nil}.{css stream}{$streamId}{lb}
+		{nil}background-color:{$startColor};
+		{if $endColor}
+			{nil}background-image:-webkit-gradient(linear,50% 0%,50% 100%,color-stop(0%,{$startColor}),color-stop(100%,{$endColor}));
+			{nil}background-image:-webkit-linear-gradient({$startColor},{$endColor});
+			{nil}background-image:-moz-linear-gradient({$startColor},{$endColor});
+			{nil}background-image:-o-linear-gradient({$startColor},{$endColor});
+			{nil}background-image:linear-gradient({$startColor},{$endColor});
+			{nil}background-repeat:repeat-x;
+		{/if}
+		{if $borderColor}
+			{nil}-moz-box-shadow:inset 0 0 0 3px {$borderColor};
+			{nil}-webkit-box-shadow:inset 0 0 0 3px {$borderColor};
+			{nil}box-shadow:inset 0 0 0 3px {$borderColor};
+		{/if}
+		{nil}color:{$textColor};
+	{nil}{rb}
 {/template}
 
 /* End of templates.soy */

@@ -5,9 +5,7 @@
  * @see https://dev.twitter.com/docs/api/1/get/search
  * @see https://dev.twitter.com/docs/using-search
  */
-goog.provide('Twitter.search');
-goog.provide('Twitter.tweet');
-goog.provide('Twitter.parseTime');
+goog.provide('twangler.twitter.utils');
 
 goog.require("goog.net.Jsonp");
 goog.require("goog.object");
@@ -17,15 +15,14 @@ goog.require("goog.object");
  * @param  {Object} options     [description]
  * @param  {Function} callback_fn [description]
  */
-Twitter.search = function (query, options, callback_fn) {
+twangler.twitter.utils.search = function (query, options, callback_fn) {
 
   var request = new goog.net.Jsonp('http://search.twitter.com/search.json'),
       payload = {
         'lang' : 'en',
         'result_type' : 'recent',
-        'rpp' : 30,
-        '_dc' : goog.now(),
-        'q' : ( goog.isDef(query) ? query : '' )
+        'rpp' : 100,
+        'q' : query
       };
 
   goog.object.extend(payload, options);
@@ -35,43 +32,28 @@ Twitter.search = function (query, options, callback_fn) {
 };
 
 /**
- * @param  {Object} tweet
- * @param  {string=} parent_id
- * @param  {string=} color
- * @constructor
+ * @param  {string} a
+ * @return {number}
  */
-Twitter.tweet = function (tweet, parent_id, color) {
-  var contrast = function (color) {
-      return '#' + (Number('0x'+color.substr(1)).toString(10) > 0xffffff/2 ? '000000' :  'ffffff');
-  };
-  this.id = tweet['id'];
-  this.user = tweet['from_user'];
-  this.img = tweet['profile_image_url'];
-  this.time = tweet['created_at'];
-  this.str_time = Twitter.parseTime(this.time);
-  this.text = tweet['text'];
-  this.color = goog.isDef(color) ? color : '#000000';
-  this.stream_id = goog.isDef(parent_id) ? parent_id : '0';
-  this.contrast = contrast(this.color);
-};
+twangler.twitter.utils.dateDifference = function (a){
+    var z = navigator.userAgent,
+        zie = z.match(/MSIE\s([^;]*)/),
+        b = new Date(),
+        c = new Date(a);
 
+    if (zie)
+        c = Date.parse(a.replace(/( \+)/, ' UTC$1'));
+
+    return b - c;
+};
 /**
  * @see http://darklaunch.com/2010/05/21/parse-twitter-created-at-value-into-friendly-time-format-relative-time-time-ago
  * @see http://widgets.twimg.com/j/1/widget.js
  * @param  {string} a [description]
  * @return {string}   [description]
  */
-Twitter.parseTime = function (a) {
-
-    var z = navigator.userAgent,
-      zie = z.match(/MSIE\s([^;]*)/),
-      b = new Date(),
-      c = new Date(a);
-
-    if (zie) {
-        c = Date.parse(a.replace(/( \+)/, ' UTC$1'));
-    }
-    var d = b - c;
+twangler.twitter.utils.parseTime = function (a) {
+    var d = twangler.twitter.utils.dateDifference(a);
     var e = 1000,
         minute = e * 60,
         hour = minute * 60,
@@ -107,3 +89,18 @@ Twitter.parseTime = function (a) {
         return "over a year ago";
     }
 };
+
+
+/**
+ * @param  {string} query
+ * @return {string}
+ */
+twangler.twitter.utils.filterQuery = function (query) {
+    if (/^@\w+$/.test(query)) {
+        query = query.substr(1);
+        query = '@' + query + ' OR to:' + query + ' OR from:' + query;
+    }
+    return query;
+};
+
+/* end of twitter.js */

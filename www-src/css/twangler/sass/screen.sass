@@ -1,138 +1,134 @@
-@import blueprint/reset
-//@import blueprint/grid
-//@import zen
-//@import partials/base
-//@import blueprint
-//@import blueprint/buttons
-//@import blueprint/scaffolding
-//@import compass/utilities/general/clearfix
+/* ============================================================
+ *
+ *320 and Up by Andy Clarke
+ *Version: 3.0
+ *URL: http://stuffandnonsense.co.uk/projects/320andup/
+ *Apache License: v2.0. http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *============================================================
+
+// 1. ROOT 					==============================
+
+// Compass
+@import compass
+
+// CSS reset
+@import reset
+
+// Variables and mixins
+@import variables
+@import mixins
+
+// Site wide styles (html, body)
+@import site
+
+// 2. TYPOGRAPHY 			==============================
+
+// Block level (h1, p) and text-level (em, strong) type
+@import typography
+
+// 3. COLOUR 				==============================
+
+// Colour interaction semantics
+a
+  text-decoration: none
+  color: inherit
+  &:visited
+    //color: $linkcolorvisited
+  &:hover
+    text-decoration: underline
+    //color: $linkcolorhover
+  &:focus
+    outline: thin dotted
+    //color: $linkcolorfocus
+  &:hover,
+  &:active
+    outline: 0
+
+\::-moz-selection
+  background-color: lighten($basecolor, 65%)
+  color: $basecolor
+  text-shadow: none
+
+\::selection
+  background-color: lighten($basecolor, 65%)
+  color: $basecolor
+  text-shadow: none
 //
-@import library/grid.scss
+  @import colour
 
-@import library/mixins.scss
+// 4. TEXTURE 				==============================
 
-@import compass/css3/border-radius
-@import compass/typography/links/link-colors
+// Alerts, badges, boxes and gradients
+@import texture
 
+// Font Awesome icon fonts (optional)
+  @import font-awesome
 
-// To generate css equivalent to the blueprint css but with your
-// configuration applied, uncomment:
-// @include blueprint
-// @see http://semantic.gs/
+// 5. ELEMENTS 				==============================
 
-// Zen Defaults
-$columns: 12
-$column-width: 60
-$gutter-width: 20
-$total-width: 100%
+// Figures, images and other elements
+@import elements
 
-body
-	background: #2F2F2F
-	color: #C6C6C6
-	a
-		+link-colors(#00c, #0cc, #c0c, #ccc, #cc0)
+// Standard form controls
+@import forms
 
+// Button styles (optional)
+@import buttons
 
-%twangler-box
-	+border-radius
-	padding: 2px 0
+// Tables
+  @import tables
 
-@mixin twangler-margin-top
-	margin-top: 5px
+// 6. LAYOUT 			==============================
 
-//.twangler-body
+// Page level layout styles (banner, navigation, content, contentinfo)
+@import page
 
-.twangler-header
-	+twangler-margin-top
+//  7. VENDOR-SPECIFIC 		==============================
+//  8. MODERNIZR 			==============================
 
-.header-label-front
-	+column(2)
-	+push(1)
+// @import "modernizr";
 
-.header-input
-	+column(3)
+//  9. TEMPLATE SPECIFICS 	==============================
+@import grid
+// 320px - Base
+@import 320
 
-.header-sumbit
-	+column(1)
+//  10. MEDIA QUERIES 		==============================
 
-.header-label-back
-	+column(2)
-	+push(2)
+//@media print
+  @import print
 
-.twangler-cloud
-	+column(12)
+// 480px
+@media only screen and (min-width: 480px)
+  @import 480
 
-.cloud-users,
-.cloud-hashtags,
-.cloud-phrases
-	+row(12)
+// 600px
+@media only screen and (min-width: 600px)
+  @import 600
 
-.cloud-item
-	@extend %twangler-box
-	+column(2,12)
-	+twangler-margin-top
-	color: white
-	text-align: center
-	background-color: black
+// 768px
+@media only screen and (min-width: 768px)
+  @import 768
 
-.twangler-selected
-	+column(4)
+// 992px
+@media only screen and (min-width: 992px)
+  @import 992
 
-.selected-form
-	+row(4)
-	@extend %twangler-box
-	+twangler-margin-top
-	text-align: center
+// 1382px
+@media only screen and (min-width: 1382px)
+  @import 1382
 
-.selected-input
-	+column(3,4)
-	margin-right: 0
+// 2x
 
-.selected-sumbit
-	+column(1,4)
+//@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5)
+  @import 2x
 
-.selected-item
-	@extend %twangler-box
-	@extend %clearfix
-	+twangler-margin-top
-	text-align: center
+//  11. UPSTARTS 			==============================
 
-.twangler-stream
-	+column(8)
+// Modules and panels
+  @import upstarts/320andup-modules/upstart
+  @import upstarts/320andup-panels/upstart
 
-.twangler-tweet
-	@extend %twangler-box
-	@extend %clearfix
-	+twangler-margin-top
-
-.tweet-image
-	margin: 6px
-	width: 48px
-	height: 48px
-	float: left
-	background: black
-	border-top: 1px solid #333
-	border-left: 1px solid #333
-	border-bottom: 1px solid #666
-	border-right: 1px solid #666
-
-.tweet-user,
-.tweet-date
-	padding: 6px
-
-.tweet-text
-	padding: 6px
-	line-height: 16px
-	margin-left: 60px
-	font-size: 100%
-
-// small devices
-@media screen and (max-device-width: 480px)
-	.cloud-item,
-	.selected-item
-		+column(4)
-	.twangler-selected,
-	.twangler-stream
-		+column(12)
-
-// End of screen.sass
+// Layout option using display:table for navigation positioning
+// @import "upstarts/320andup-display-table/upstart";
