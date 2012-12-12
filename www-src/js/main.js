@@ -5,6 +5,8 @@ goog.require('goog.dom');
 goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
+goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyHandler');
 goog.require('goog.fx');
 goog.require('goog.fx.dom');
 goog.require('goog.string');
@@ -285,11 +287,14 @@ twangler.main = function () {
 
 	var icon_plus_className = 'icon-plus',
 		icon_refresh_className = 'icon-refresh',
+
 		active_icon_className = goog.getCssName('twangler-icon-active'),
 		cloud_item_className = goog.getCssName('cloud-item'),
 		selected_item_className = goog.getCssName('selected-item'),
 		cloud_hidden_className = goog.getCssName('cloud-hidden'),
+
 		cloud_div = goog.dom.getElementByClass(goog.getCssName('twangler-cloud')),
+		header_input = goog.dom.getElementByClass(goog.getCssName('header-input')),
 		header_buttons_div = goog.dom.getElementByClass(goog.getCssName('header-buttons')),
 		cloud_update_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-update')),
 		cloud_update_button_icon = goog.dom.getElementByClass(goog.getCssName('header-update-icon')),
@@ -301,8 +306,12 @@ twangler.main = function () {
 		selected_form = goog.dom.getElementByClass(goog.getCssName('selected-form')),
 		selected_submit_button = goog.dom.getElementByClass(goog.getCssName('selected-submit')),
 		stream_div = goog.dom.getElementByClass(goog.getCssName('twangler-stream')),
+		stream_input = goog.dom.getElementByClass(goog.getCssName('selected-input')),
 		stream_clear_button = goog.dom.getElementByClass(goog.getCssName('twangler-stream-clear')),
-		stream_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-stream-pause'));
+		stream_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-stream-pause')),
+
+		header_input_key_handler = new goog.events.KeyHandler(header_input),
+		stream_input_key_handler = new goog.events.KeyHandler(stream_input);
 
 	/* Init Cloud */
 
@@ -326,11 +335,25 @@ twangler.main = function () {
 
 	/* Header Button Event Listeners */
 
+	goog.events.listen(header_input_key_handler, goog.events.KeyHandler.EventType.KEY, function(e) {
+		var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
+		if (keyEvent.keyCode == goog.events.KeyCodes.ENTER) {
+			var query = goog.string.trim(header_input.value);
+			if (twangler.cloudVisible) {
+				twangler.myCloud.change(query);
+				if (twangler.cloudPaused)
+					twangler.myCloud.stop();
+			} else {
+				twangler.addStream(query);
+			}
+		}
+	});
+
 	goog.events.listen(
 		cloud_update_button,
 		goog.events.EventType.CLICK,
 		function (e) {
-			var query = goog.string.trim(goog.dom.getElementByClass(goog.getCssName('header-input')).value);
+			var query = goog.string.trim(header_input.value);
 			if (twangler.cloudVisible) {
 				twangler.myCloud.change(query);
 				if (twangler.cloudPaused)
@@ -442,11 +465,19 @@ twangler.main = function () {
 
 	/* Stream Button Event Listeners */
 
+	goog.events.listen(stream_input_key_handler, goog.events.KeyHandler.EventType.KEY, function(e) {
+		var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
+		if (keyEvent.keyCode == goog.events.KeyCodes.ENTER) {
+			var query = goog.string.trim(stream_input.value);
+			twangler.addStream(query);
+		}
+	});
+	
 	goog.events.listen(
 		selected_submit_button,
 		goog.events.EventType.CLICK,
 		function (e) {
-			var query = goog.string.trim(goog.dom.getElementByClass(goog.getCssName('selected-input')).value);
+			var query = goog.string.trim(stream_input.value);
 			twangler.addStream(query);
 		}
 	);
