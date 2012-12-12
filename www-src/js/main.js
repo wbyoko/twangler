@@ -68,7 +68,7 @@ twangler.tweetIntervalId = 0;
 twangler.maintenanceIntervalId = 0;
 
 /** @type {boolean} */
-twangler.cloudBind = true;
+twangler.cloudBind = false;
 
 /** @type {boolean} */
 twangler.cloudVisible = true;
@@ -413,10 +413,8 @@ twangler.main = function () {
 				goog.style.showElement(header_stream_clear_button, false);
 				goog.dom.classes.remove(cloud_pause_button, active_icon_className);
 				goog.dom.classes.swap(cloud_update_button_icon, icon_plus_className, icon_refresh_className);
-				goog.dom.classes.add(cloud_bind_button, active_icon_className);
 				twangler.myCloud.start();
 				twangler.cloudPaused = false;
-				twangler.cloudBind = true;
 			} else {
 				anim1 = new goog.fx.dom.FadeOutAndHide(cloud_div, twangler.FX_INTERVAL);
 				anim2 = new goog.fx.dom.FadeOutAndHide(selected_form, twangler.FX_INTERVAL);
@@ -425,10 +423,8 @@ twangler.main = function () {
 				goog.style.showElement(header_stream_clear_button, true);
 				goog.dom.classes.enable(cloud_pause_button,active_icon_className,stream_paused);
 				goog.dom.classes.swap(cloud_update_button_icon, icon_refresh_className, icon_plus_className);
-				goog.dom.classes.remove(cloud_bind_button, active_icon_className);
 				twangler.myCloud.stop();
 				twangler.cloudPaused = true;
-				twangler.cloudBind = false;
 			}
 
 			goog.dom.classes.toggle(header_buttons_div, cloud_hidden_className);
@@ -472,7 +468,7 @@ twangler.main = function () {
 			twangler.addStream(query);
 		}
 	});
-	
+
 	goog.events.listen(
 		selected_submit_button,
 		goog.events.EventType.CLICK,
