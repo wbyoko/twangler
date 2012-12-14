@@ -58,8 +58,8 @@
 	elseif (parse_crontab('* 11-22 * * 6')) //NCAA Football
 		$defaultQuery = '#football';
 	else
-		$defaultQuery = 'meme';
-	//getRandomTrendingTopic();
+		//$defaultQuery = 'meme';
+		getRandomTrendingTopic();
 
 ?><!DOCTYPE html>
 <html>

@@ -711,6 +711,16 @@ body {
     width: 7.5%;
     margin: 0 1.25%;
   }
+
+  /* line 37, ../sass/_992.sass */
+  .twangler-selected {
+    width: 22.91667%;
+  }
+
+  /* line 40, ../sass/_992.sass */
+  .twangler-stream {
+    width: 72.91667%;
+  }
 }
 @media only screen and (min-width: 1382px) {
   /* 1382 =================================================== */

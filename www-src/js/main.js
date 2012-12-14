@@ -6,6 +6,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyEvent');
 goog.require('goog.events.KeyHandler');
 goog.require('goog.fx');
 goog.require('goog.fx.dom');
@@ -76,6 +77,8 @@ twangler.cloudVisible = true;
 /** @type {boolean} */
 twangler.cloudPaused = false;
 
+/** @type {boolean} */
+twangler.streamPaused = false;
 
 /* Function definitions */
 
@@ -131,6 +134,7 @@ twangler.startStreams = function () {
 			}
 		}, twangler.FX_INTERVAL
 	);
+	twangler.streamPaused = false;
 	/*
 	twangler.maintenanceIntervalId = setInterval(
 		function() {
@@ -152,6 +156,7 @@ twangler.stopStreams = function () {
 	for (var i = twangler.myStreams.length - 1; i >= 0; i--) {
 		twangler.myStreams[i].stop();
 	}
+	twangler.streamPaused = true;
 };
 
 /**
@@ -275,6 +280,98 @@ twangler.addStream = function (query, opt_color, opt_text_color, opt_cloud_query
 };
 goog.exportSymbol('asp', twangler.addStream);
 
+twangler.toggleCloudVisibility = function () {
+
+	var icon_plus_className = 'icon-plus',
+		icon_refresh_className = 'icon-refresh',
+
+		active_icon_className = goog.getCssName('twangler-icon-active'),
+		cloud_hidden_className = goog.getCssName('cloud-hidden'),
+
+		cloud_div = goog.dom.getElementByClass(goog.getCssName('twangler-cloud')),
+		header_buttons_div = goog.dom.getElementByClass(goog.getCssName('header-buttons')),
+		cloud_update_button_icon = goog.dom.getElementByClass(goog.getCssName('header-update-icon')),
+		cloud_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-pause')),
+		header_stream_clear_button = goog.dom.getElementByClass(goog.getCssName('twangler-header-stream-clear')),
+		cloud_show_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-show')),
+		selected_form = goog.dom.getElementByClass(goog.getCssName('selected-form')),
+		stream_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-stream-pause')),
+
+		stream_paused = goog.dom.classes.has(stream_pause_button, active_icon_className),
+		anim1,
+		anim2;
+
+	if (goog.dom.classes.toggle(cloud_show_button, active_icon_className)) {
+		anim1 = new goog.fx.dom.FadeInAndShow(cloud_div, twangler.FX_INTERVAL);
+		anim2 = new goog.fx.dom.FadeInAndShow(selected_form, twangler.FX_INTERVAL);
+		anim1.play();
+		anim2.play();
+		goog.style.showElement(header_stream_clear_button, false);
+		goog.dom.classes.remove(cloud_pause_button, active_icon_className);
+		goog.dom.classes.swap(cloud_update_button_icon, icon_plus_className, icon_refresh_className);
+		twangler.myCloud.start();
+		twangler.cloudPaused = false;
+	} else {
+		anim1 = new goog.fx.dom.FadeOutAndHide(cloud_div, twangler.FX_INTERVAL);
+		anim2 = new goog.fx.dom.FadeOutAndHide(selected_form, twangler.FX_INTERVAL);
+		anim1.play();
+		anim2.play();
+		goog.style.showElement(header_stream_clear_button, true);
+		goog.dom.classes.enable(cloud_pause_button,active_icon_className,stream_paused);
+		goog.dom.classes.swap(cloud_update_button_icon, icon_refresh_className, icon_plus_className);
+		twangler.myCloud.stop();
+		twangler.cloudPaused = true;
+	}
+
+	goog.dom.classes.toggle(header_buttons_div, cloud_hidden_className);
+
+	twangler.cloudVisible = goog.dom.classes.has(cloud_show_button, active_icon_className);
+};
+
+twangler.clearStream = function () {
+	var stream_div = goog.dom.getElementByClass(goog.getCssName('twangler-stream'));
+
+	goog.dom.removeChildren(stream_div);
+};
+
+twangler.toggleCloudPause = function () {
+
+	var active_icon_className = goog.getCssName('twangler-icon-active'),
+		cloud_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-pause'));
+
+	if (twangler.cloudVisible) {
+		if (goog.dom.classes.toggle(cloud_pause_button, active_icon_className)) {
+			twangler.myCloud.stop();
+			twangler.cloudPaused = true;
+		} else {
+			twangler.myCloud.start();
+			twangler.cloudPaused = false;
+		}
+	}
+};
+
+twangler.toggleStreamPause = function () {
+
+	var active_icon_className = goog.getCssName('twangler-icon-active'),
+		cloud_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-pause')),
+		stream_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-stream-pause'));
+
+	if (twangler.cloudVisible) {
+		if (goog.dom.classes.toggle(stream_pause_button, active_icon_className)) {
+			twangler.stopStreams();
+		} else {
+			twangler.startStreams();
+		}
+	} else {
+		if (goog.dom.classes.toggle(cloud_pause_button, active_icon_className)) {
+			twangler.stopStreams();
+		} else {
+			twangler.startStreams();
+		}
+	}
+
+	twangler.streamPaused = !twangler.streamPaused;
+};
 /* Main Function */
 
 
@@ -285,31 +382,26 @@ twangler.main = function () {
 	var fragment = soy.renderAsFragment(twangler.templates.frame, {defaultQuery : twangler.defaultQuery});
 	goog.dom.appendChild(goog.dom.getElementsByTagNameAndClass('body')[0], /** @type {Node} */ (fragment));
 
-	var icon_plus_className = 'icon-plus',
-		icon_refresh_className = 'icon-refresh',
-
-		active_icon_className = goog.getCssName('twangler-icon-active'),
+	var active_icon_className = goog.getCssName('twangler-icon-active'),
 		cloud_item_className = goog.getCssName('cloud-item'),
 		selected_item_className = goog.getCssName('selected-item'),
-		cloud_hidden_className = goog.getCssName('cloud-hidden'),
 
 		cloud_div = goog.dom.getElementByClass(goog.getCssName('twangler-cloud')),
 		header_input = goog.dom.getElementByClass(goog.getCssName('header-input')),
-		header_buttons_div = goog.dom.getElementByClass(goog.getCssName('header-buttons')),
+		
 		cloud_update_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-update')),
-		cloud_update_button_icon = goog.dom.getElementByClass(goog.getCssName('header-update-icon')),
 		cloud_bind_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-bind')),
 		cloud_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-pause')),
 		header_stream_clear_button = goog.dom.getElementByClass(goog.getCssName('twangler-header-stream-clear')),
 		cloud_show_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-show')),
+
 		selected_div = goog.dom.getElementByClass(goog.getCssName('twangler-selected')),
-		selected_form = goog.dom.getElementByClass(goog.getCssName('selected-form')),
 		selected_submit_button = goog.dom.getElementByClass(goog.getCssName('selected-submit')),
-		stream_div = goog.dom.getElementByClass(goog.getCssName('twangler-stream')),
 		stream_input = goog.dom.getElementByClass(goog.getCssName('selected-input')),
 		stream_clear_button = goog.dom.getElementByClass(goog.getCssName('twangler-stream-clear')),
 		stream_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-stream-pause')),
 
+		root_key_handler = new goog.events.KeyHandler(document),
 		header_input_key_handler = new goog.events.KeyHandler(header_input),
 		stream_input_key_handler = new goog.events.KeyHandler(stream_input);
 
@@ -332,6 +424,29 @@ twangler.main = function () {
 			twangler.numTwitterRequests++;
 		}
 	);
+
+	/* Document Keyboard Event Listener */
+
+	goog.events.listen(root_key_handler, goog.events.KeyHandler.EventType.KEY, function(e) {
+		var keyEvent = /** @type {goog.events.KeyEvent} */ (e);
+		if (keyEvent.ctrlKey) {
+			switch(keyEvent.keyCode)
+			{
+				case goog.events.KeyCodes.Z:
+					//pause
+					twangler.toggleStreamPause();
+				break;
+				case goog.events.KeyCodes.S:
+					//show
+					twangler.toggleCloudVisibility();
+				break;
+				case goog.events.KeyCodes.D:
+					//clear
+					twangler.clearStream();
+				break;
+			}
+		}
+	});
 
 	/* Header Button Event Listeners */
 
@@ -380,19 +495,9 @@ twangler.main = function () {
 		goog.events.EventType.CLICK,
 		function (e) {
 			if (twangler.cloudVisible) {
-				if (goog.dom.classes.toggle(cloud_pause_button, active_icon_className)) {
-					twangler.myCloud.stop();
-					twangler.cloudPaused = true;
-				} else {
-					twangler.myCloud.start();
-					twangler.cloudPaused = false;
-				}
+				twangler.toggleCloudPause();
 			} else {
-				if (goog.dom.classes.toggle(cloud_pause_button, active_icon_className)) {
-					twangler.stopStreams();
-				} else {
-					twangler.startStreams();
-				}
+				twangler.toggleStreamPause();
 			}
 		}
 	);
@@ -401,35 +506,7 @@ twangler.main = function () {
 		cloud_show_button,
 		goog.events.EventType.CLICK,
 		function (e) {
-			var stream_paused = goog.dom.classes.has(stream_pause_button, active_icon_className),
-				anim1,
-				anim2;
-
-			if (goog.dom.classes.toggle(cloud_show_button, active_icon_className)) {
-				anim1 = new goog.fx.dom.FadeInAndShow(cloud_div, twangler.FX_INTERVAL);
-				anim2 = new goog.fx.dom.FadeInAndShow(selected_form, twangler.FX_INTERVAL);
-				anim1.play();
-				anim2.play();
-				goog.style.showElement(header_stream_clear_button, false);
-				goog.dom.classes.remove(cloud_pause_button, active_icon_className);
-				goog.dom.classes.swap(cloud_update_button_icon, icon_plus_className, icon_refresh_className);
-				twangler.myCloud.start();
-				twangler.cloudPaused = false;
-			} else {
-				anim1 = new goog.fx.dom.FadeOutAndHide(cloud_div, twangler.FX_INTERVAL);
-				anim2 = new goog.fx.dom.FadeOutAndHide(selected_form, twangler.FX_INTERVAL);
-				anim1.play();
-				anim2.play();
-				goog.style.showElement(header_stream_clear_button, true);
-				goog.dom.classes.enable(cloud_pause_button,active_icon_className,stream_paused);
-				goog.dom.classes.swap(cloud_update_button_icon, icon_refresh_className, icon_plus_className);
-				twangler.myCloud.stop();
-				twangler.cloudPaused = true;
-			}
-
-			goog.dom.classes.toggle(header_buttons_div, cloud_hidden_className);
-
-			twangler.cloudVisible = goog.dom.classes.has(cloud_show_button, active_icon_className);
+			twangler.toggleCloudVisibility();
 		}
 	);
 
@@ -437,7 +514,7 @@ twangler.main = function () {
 		header_stream_clear_button,
 		goog.events.EventType.CLICK,
 		function (e) {
-			goog.dom.removeChildren(stream_div);
+			twangler.clearStream();
 		}
 	);
 
@@ -482,11 +559,7 @@ twangler.main = function () {
 		stream_pause_button,
 		goog.events.EventType.CLICK,
 		function (e) {
-			if (goog.dom.classes.toggle(stream_pause_button, active_icon_className)) {
-				twangler.stopStreams();
-			} else {
-				twangler.startStreams();
-			}
+			twangler.toggleStreamPause();
 		}
 	);
 
@@ -494,7 +567,7 @@ twangler.main = function () {
 		stream_clear_button,
 		goog.events.EventType.CLICK,
 		function (e) {
-			goog.dom.removeChildren(stream_div);
+			twangler.clearStream();
 		}
 	);
 
