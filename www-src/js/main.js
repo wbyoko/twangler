@@ -14,6 +14,7 @@ goog.require('goog.string');
 goog.require('goog.style');
 goog.require('goog.Uri');
 goog.require('mvc.Router');
+goog.require('twangler.analytics');
 goog.require('twangler.Cloud');
 goog.require('twangler.Cloud.EventType');
 goog.require('twangler.Stream');
@@ -605,9 +606,11 @@ twangler.main = function () {
 			}
 		}
 	);
-
 	/* Init Router */
 	//twangler.router.route('*', twangler.parseToken);
+	
+	twangler.analytics.trackPage();
+	twangler.analytics.gaInit();
 };
 
 twangler.main();

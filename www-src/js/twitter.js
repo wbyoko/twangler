@@ -10,6 +10,9 @@ goog.provide('twangler.twitter.utils');
 goog.require("goog.net.Jsonp");
 goog.require("goog.object");
 
+/** @type {string} */
+twangler.twitter.utils.lang =  ((navigator.language) ? navigator.language : navigator['userLanguage']).split('-')[0];
+
 /**
  * @param  {string} query       [description]
  * @param  {Object} options     [description]
@@ -19,7 +22,7 @@ twangler.twitter.utils.search = function (query, options, callback_fn) {
 
   var request = new goog.net.Jsonp('http://search.twitter.com/search.json'),
       payload = {
-        'lang' : 'en',
+        'lang' : twangler.twitter.utils.lang,
         'result_type' : 'recent',
         'rpp' : 100,
         'q' : query

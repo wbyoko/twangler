@@ -64,6 +64,7 @@ compress-js-advanced: js-compiled
 		--js closure/library/closure/goog/deps.js \
 		--js tmp/css/renaming_map.c.js \
 		--externs www-src/externs/application.js \
+		--externs www-src/externs/google_analytics_api.js \
 		--js_output_file tmp/js/main.xmin.js \
 		--compilation_level ADVANCED_OPTIMIZATIONS
 
@@ -78,6 +79,7 @@ compress-js-simple: js-compiled
 		--formatting=pretty_print \
 		--formatting=print_input_delimiter \
 		--externs www-src/externs/application.js \
+		--externs www-src/externs/google_analytics_api.js \
 		--js_output_file tmp/js/main.min.js \
 		--compilation_level SIMPLE_OPTIMIZATIONS
 
