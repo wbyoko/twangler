@@ -36,6 +36,8 @@ debug: html css compress-js-simple
 	@cp tmp/css/*.css www/css
 	@mkdir -p www/js
 	@cp tmp/js/*.js www/js
+	@cp tmp/js/*.map www/js
+	@echo "//@ sourceMappingURL=main.min.js.map" >> www/js/main.min.js
 	@open www/index.d.html
 
 prod: html css compress-js-advanced
@@ -46,6 +48,8 @@ prod: html css compress-js-advanced
 	@cp tmp/css/*.css www/css
 	@mkdir -p www/js
 	@cp tmp/js/*.js www/js
+	@cp tmp/js/*.map www/js
+	@echo "//@ sourceMappingURL=main.xmin.js.map" >> www/js/main.xmin.js
 	@open www/index.c.html
 	@echo "Build Complete"
 
@@ -65,6 +69,8 @@ compress-js-advanced: js-compiled
 		--js tmp/css/renaming_map.c.js \
 		--externs www-src/externs/application.js \
 		--externs www-src/externs/google_analytics_api.js \
+		--create_source_map tmp/js/main.xmin.js.map \
+		--source_map_format=V3 \
 		--js_output_file tmp/js/main.xmin.js \
 		--compilation_level ADVANCED_OPTIMIZATIONS
 
@@ -80,6 +86,8 @@ compress-js-simple: js-compiled
 		--formatting=print_input_delimiter \
 		--externs www-src/externs/application.js \
 		--externs www-src/externs/google_analytics_api.js \
+		--create_source_map tmp/js/main.min.js.map \
+		--source_map_format=V3 \
 		--js_output_file tmp/js/main.min.js \
 		--compilation_level SIMPLE_OPTIMIZATIONS
 

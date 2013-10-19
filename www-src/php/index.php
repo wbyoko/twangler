@@ -67,12 +67,12 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1, user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<title>Twangler</title>
+		<title>Twanglr</title>
 		<meta name="description" content="Twitter experience. Track trending topics and live events.">
 		<style><?php 
 			echo $css; 
 		?></style>
-		<link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet">
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet">
 	</head>
 	<body>
 		<script><?php 
