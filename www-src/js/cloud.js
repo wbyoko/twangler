@@ -50,14 +50,6 @@ twangler.Cloud.prototype.start = function () {
 	this.interval_id = setInterval( function() { self.refresh(); }, 15000);
 };
 
-/**
- * @param {string} query
- * @return {boolean}
- */
-twangler.Cloud.prototype.hasEquivalentQueries = function (query) {
-	return goog.string.caseInsensitiveCompare(this.query, query) === 0;
-};
-
 twangler.Cloud.prototype.refresh = function () {
 	var query = this.filteredQuery,
 		cloud = this,

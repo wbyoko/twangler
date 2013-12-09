@@ -3,7 +3,6 @@ goog.provide('twangler.Stream.EventType');
 
 goog.require('goog.events');
 goog.require('goog.events.EventTarget');
-goog.require('goog.string');
 goog.require('twangler.Tweet');
 goog.require('twangler.twitter.utils');
 
@@ -11,26 +10,18 @@ goog.require('twangler.twitter.utils');
 /**
  * @param {string} query
  * @param {string} id
- * @param {string} opt_cloudQuery
- * @param {string} opt_color
- * @param {string} opt_endColor
- * @param {string} opt_textColor
- * @param {string} opt_borderColor
+ * @param {string} opt_cloud_query
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-twangler.Stream = function (query, id, opt_cloudQuery, opt_color, opt_endColor, opt_textColor, opt_borderColor) {
+twangler.Stream = function (query, id, opt_cloud_query) {
 	goog.events.EventTarget.call(this);
 	this.query = query;
-	this.cloud_query = opt_cloudQuery;
+	this.cloud_query = opt_cloud_query;
 	this.id = id;
 	this.last_id = 0;
 	this.tweet_queue = [];
-	this.interval_id = 0;
-	this.color = opt_color;
-	this.endColor = opt_endColor;
-	this.textColor = opt_textColor;
-	this.borderColor = opt_borderColor;
+	this.interval_id  = 0;
 
 	this.filteredQuery = twangler.twitter.utils.filterQuery(goog.string.trim(query)) +
 						( this.cloud_query ? ' '  + twangler.twitter.utils.filterQuery(this.cloud_query) : '' ) +
@@ -51,22 +42,6 @@ twangler.Stream.prototype.start = function () {
 
 twangler.Stream.prototype.stop = function () {
 	clearInterval(this.interval_id);
-};
-
-/**
- * @param {string} query
- * @param {string} opt_cloud_query
- * @return {boolean}
- */
-twangler.Stream.prototype.hasEquivalentQueries = function (query, opt_cloud_query) {
-
-	var mainQueryEqual = goog.string.caseInsensitiveCompare(this.query, query) === 0,
-		cloudQueryEqual = goog.isDef(opt_cloud_query) === goog.isDef(this.cloud_query);
-		
-	if (cloudQueryEqual && goog.isDef(this.cloud_query))
-		cloudQueryEqual = !goog.string.caseInsensitiveCompare(this.cloud_query, opt_cloud_query);
-	
-	return mainQueryEqual && cloudQueryEqual;
 };
 
 twangler.Stream.prototype.refresh = function () {

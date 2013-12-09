@@ -13,20 +13,16 @@ goog.require('goog.fx.dom');
 goog.require('goog.string');
 goog.require('goog.style');
 goog.require('goog.Uri');
-//goog.require('mvc.Router');
-goog.require('soy');
+goog.require('mvc.Router');
 goog.require('twangler.analytics');
 goog.require('twangler.Cloud');
 goog.require('twangler.Cloud.EventType');
-goog.require('twangler.constants');
 goog.require('twangler.Stream');
 goog.require('twangler.Stream.EventType');
 goog.require('twangler.templates');
 goog.require('twangler.twitter.utils');
 goog.require('twangler.utils');
-//goog.require('twangler.view');
-goog.require('twangler.view.CloudContainer');
-goog.require('twangler.view.CloudItem');
+goog.require('soy');
 
 
 /* Constant Definitions */
@@ -43,7 +39,7 @@ twangler.FX_INTERVAL = 800;
 
 
 /** @type {mvc.Router} */
-//twangler.router = new mvc.Router();
+twangler.router = new mvc.Router();
 
 /** @type {string} */
 twangler.defaultQuery = goog.isDef(window['dQ']) ? window['dQ'] : '#news';
@@ -84,9 +80,6 @@ twangler.cloudPaused = false;
 
 /** @type {boolean} */
 twangler.streamPaused = false;
-
-/** @type {twangler.view.CloudContainer} */
-twangler.cloudContainer;
 
 /* Function definitions */
 
@@ -187,41 +180,41 @@ twangler.addStream = function (query, opt_color, opt_text_color, opt_cloud_query
 		stream_label,
 		flag = false;
 
-	if (goog.isDef(opt_gradient)) {
-		if (!goog.string.caseInsensitiveCompare(opt_gradient, 'darken')) {
-			endColor = twangler.utils.getGradientColor(color, true);
-		} else if (goog.string.caseInsensitiveCompare(opt_gradient, 'none')) {
-			endColor = goog.color.parse(opt_gradient).hex;
+		if (goog.isDef(opt_gradient)) {
+			if (!goog.string.caseInsensitiveCompare(opt_gradient, 'darken')) {
+				endColor = twangler.utils.getGradientColor(color, true);
+			} else if (goog.string.caseInsensitiveCompare(opt_gradient, 'none')) {
+				endColor = goog.color.parse(opt_gradient).hex;
+			}
+		} else {
+			endColor = twangler.utils.getGradientColor(color);
 		}
-	} else {
-		endColor = twangler.utils.getGradientColor(color);
-	}
 
-	if (goog.isDef(opt_border_color)) {
-		if (!goog.string.caseInsensitiveCompare(opt_border_color, 'darken')) {
-			borderColor = twangler.utils.getGradientColor(color, true);
-		} else if (goog.string.caseInsensitiveCompare(opt_border_color, 'none')) {
-			borderColor = goog.color.parse(opt_border_color).hex;
+		if (goog.isDef(opt_border_color)) {
+			if (!goog.string.caseInsensitiveCompare(opt_border_color, 'darken')) {
+				borderColor = twangler.utils.getGradientColor(color, true);
+			} else if (goog.string.caseInsensitiveCompare(opt_border_color, 'none')) {
+				borderColor = goog.color.parse(opt_border_color).hex;
+			}
+		} else {
+			borderColor = twangler.utils.getGradientColor(color);
 		}
-	} else {
-		borderColor = twangler.utils.getGradientColor(color);
-	}
 
-	if (goog.isDef(opt_cloud_query)) {
-		cloud_query = opt_cloud_query;
-	} else if (twangler.cloudBind && goog.string.caseInsensitiveCompare(twangler.myCloud.query, query)) {
-		cloud_query = twangler.myCloud.query;
-	}
+		if (goog.isDef(opt_cloud_query)) {
+			cloud_query = opt_cloud_query;
+		} else if (twangler.cloudBind && goog.string.caseInsensitiveCompare(twangler.myCloud.query, query)) {
+			cloud_query = twangler.myCloud.query;
+		}
 
-	// - Not adding color compare at this time. this is where i would add color compare
+		stream = new twangler.Stream(query, stream_id, cloud_query);
+
+	stream_label = stream.label;
+	//@todo this is where i would add color compare
 	for (var i = twangler.myStreams.length - 1; i >= 0 && !flag; i--) {
-		flag = twangler.myStreams[i].hasEquivalentQueries(query, cloud_query);
+		flag = !goog.string.caseInsensitiveCompare(twangler.myStreams[i].label, stream_label);
 	}
 
 	if (!flag) {
-
-
-		stream = new twangler.Stream(query, stream_id, cloud_query, color, endColor, text_color, borderColor);
 
 		var itemFragment = soy.renderAsFragment( twangler.templates.selectedItem, {
 				item : stream.label,
@@ -296,7 +289,7 @@ twangler.toggleCloudVisibility = function () {
 		active_icon_className = goog.getCssName('twangler-icon-active'),
 		cloud_hidden_className = goog.getCssName('cloud-hidden'),
 
-		//cloud_div = goog.dom.getElementByClass(goog.getCssName('twangler-cloud')),
+		cloud_div = goog.dom.getElementByClass(goog.getCssName('twangler-cloud')),
 		header_buttons_div = goog.dom.getElementByClass(goog.getCssName('header-buttons')),
 		cloud_update_button_icon = goog.dom.getElementByClass(goog.getCssName('header-update-icon')),
 		cloud_pause_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-pause')),
@@ -310,7 +303,7 @@ twangler.toggleCloudVisibility = function () {
 		anim2;
 
 	if (goog.dom.classes.toggle(cloud_show_button, active_icon_className)) {
-		//anim1 = new goog.fx.dom.FadeInAndShow(cloud_div, twangler.FX_INTERVAL);
+		anim1 = new goog.fx.dom.FadeInAndShow(cloud_div, twangler.FX_INTERVAL);
 		anim2 = new goog.fx.dom.FadeInAndShow(selected_form, twangler.FX_INTERVAL);
 		anim1.play();
 		anim2.play();
@@ -320,7 +313,7 @@ twangler.toggleCloudVisibility = function () {
 		twangler.myCloud.start();
 		twangler.cloudPaused = false;
 	} else {
-		//anim1 = new goog.fx.dom.FadeOutAndHide(cloud_div, twangler.FX_INTERVAL);
+		anim1 = new goog.fx.dom.FadeOutAndHide(cloud_div, twangler.FX_INTERVAL);
 		anim2 = new goog.fx.dom.FadeOutAndHide(selected_form, twangler.FX_INTERVAL);
 		anim1.play();
 		anim2.play();
@@ -394,7 +387,7 @@ twangler.main = function () {
 		cloud_item_className = goog.getCssName('cloud-item'),
 		selected_item_className = goog.getCssName('selected-item'),
 
-		//cloud_div = goog.dom.getElementByClass(goog.getCssName('twangler-cloud')),
+		cloud_div = goog.dom.getElementByClass(goog.getCssName('twangler-cloud')),
 		header_input = goog.dom.getElementByClass(goog.getCssName('header-input')),
 		
 		cloud_update_button = goog.dom.getElementByClass(goog.getCssName('twangler-cloud-update')),
@@ -419,42 +412,16 @@ twangler.main = function () {
 
 	goog.style.showElement(header_stream_clear_button, false);
 
-	/* Init View */
-
-	twangler.cloudContainer = goog.ui.decorate(
-		goog.dom.getElementByClass(
-			goog.getCssName('twangler-cloud')
-		)
-	);
-
 	/* Init Event Listeners */
 
 	goog.events.listen(
 		twangler.myCloud,
 		twangler.Cloud.EventType.CLOUD_UPDATED,
 		function (e) {
-			/** type {twangler.view.CloudItem} */
-			var cloud = e.target;
-				//fragment = soy.renderAsFragment(twangler.templates.cloudView, {cloud : cloud }),
-			var item, i;
-
-			twangler.cloudContainer.removeChildren(true);
-
-			for (i = 0; i < cloud.users.length; i++) {
-				item = new twangler.view.CloudItem(cloud.users[i]);
-				twangler.cloudContainer.addChild(item, twangler.constants.RENDER_ITEM);
-			}
-			for (i = 0; i < cloud.hashtags.length; i++) {
-				item = new twangler.view.CloudItem(cloud.hashtags[i]);
-				twangler.cloudContainer.addChild(item, twangler.constants.RENDER_ITEM);
-			}
-			for (i = 0; i < cloud.phrases.length; i++) {
-				item = new twangler.view.CloudItem(cloud.phrases[i]);
-				twangler.cloudContainer.addChild(item, twangler.constants.RENDER_ITEM);
-			}
-
-			//is.hashtags.length > 11 && this.users.length > 3 && this.phrases.le
-			//goog.dom.appendChild(cloud_div, /** @type {Node} */ (fragment));
+			var cloud = e.target,
+				fragment = soy.renderAsFragment(twangler.templates.cloudView, {cloud : cloud });
+			goog.dom.removeChildren(cloud_div);
+			goog.dom.appendChild(cloud_div, /** @type {Node} */ (fragment));
 			twangler.numTwitterRequests++;
 		}
 	);
@@ -555,23 +522,6 @@ twangler.main = function () {
 	/* Cloud Button Event Listeners */
 
 	goog.events.listen(
-		twangler.cloudContainer,
-		[
-			goog.ui.Component.EventType.ACTIVATE,
-			goog.ui.Component.EventType.DEACTIVATE
-		], function(e) {
-			/**
-			 * @type {goog.ui.Control}
-			 */
-			var control = e.target;
-
-			var	query = control.getCaption();
-			twangler.addStream(query);
-		}
-	);
-
-/*
-	goog.events.listen(
 		cloud_div,
 		goog.events.EventType.CLICK,
 		function (e) {
@@ -581,12 +531,12 @@ twangler.main = function () {
 				/*
 				if (query.lastIndexOf('@', 0) === 0)
 					query = 'from:' + query.substr(1);
-				// * /
+				// */
 				twangler.addStream(query);
 			}
 		}
 	);
-// */
+
 	/* Stream Button Event Listeners */
 
 	goog.events.listen(stream_input_key_handler, goog.events.KeyHandler.EventType.KEY, function(e) {
