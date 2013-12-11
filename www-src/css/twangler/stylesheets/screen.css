@@ -96,6 +96,82 @@ body {
   color: #c6c6c6;
 }
 
+/*
+ * Copyright 2009 The Closure Library Authors. All Rights Reserved.
+ *
+ * Use of this source code is governed by the Apache License, Version 2.0.
+ * See the COPYING file for details.
+ */
+/*
+ * Standard styling for goog.ui.Dialog.
+ *
+ * @author ssaviano@google.com (Steven Saviano)
+ * @author attila@google.com (Attila Bodis)
+ */
+/* line 15, ../sass/_modal.scss */
+.modal-dialog {
+  background: #c1d9ff;
+  border: 1px solid #3a5774;
+  color: #000;
+  padding: 4px;
+  position: absolute;
+}
+
+/* line 25, ../sass/_modal.scss */
+.modal-dialog a,
+.modal-dialog a:link,
+.modal-dialog a:visited {
+  color: #06c;
+  cursor: pointer;
+}
+
+/* line 30, ../sass/_modal.scss */
+.modal-dialog-bg {
+  background: #666;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+/* line 37, ../sass/_modal.scss */
+.modal-dialog-title {
+  background: #e0edfe;
+  color: #000;
+  cursor: pointer;
+  font-size: 120%;
+  font-weight: bold;
+  /* Add padding on the right to ensure the close button has room. */
+  padding: 8px 31px 8px 8px;
+  position: relative;
+  _zoom: 1;
+  /* Ensures proper width in IE6 RTL. */
+}
+
+/* line 51, ../sass/_modal.scss */
+.modal-dialog-title-close {
+  /* Client apps may override the URL at which they serve the sprite. */
+  background: #e0edfe url(//ssl.gstatic.com/editor/editortoolbar.png) no-repeat -528px 0;
+  cursor: default;
+  height: 15px;
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  width: 15px;
+  vertical-align: middle;
+}
+
+/* line 64, ../sass/_modal.scss */
+.modal-dialog-buttons,
+.modal-dialog-content {
+  background-color: #fff;
+  padding: 8px;
+}
+
+/* line 69, ../sass/_modal.scss */
+.goog-buttonset-default {
+  font-weight: bold;
+}
+
 /* Typography =================================================== */
 /* line 14, ../sass/_typography.sass */
 h1, h2, h3, h4, h5, h6 {
@@ -224,32 +300,32 @@ b, strong {
   font-weight: bold;
 }
 
-/* line 33, ../sass/screen.sass */
+/* line 34, ../sass/screen.sass */
 a {
   text-decoration: none;
   color: inherit;
 }
-/* line 38, ../sass/screen.sass */
+/* line 39, ../sass/screen.sass */
 a:hover {
   text-decoration: underline;
 }
-/* line 41, ../sass/screen.sass */
+/* line 42, ../sass/screen.sass */
 a:focus {
   outline: thin dotted;
 }
-/* line 44, ../sass/screen.sass */
+/* line 45, ../sass/screen.sass */
 a:hover, a:active {
   outline: 0;
 }
 
-/* line 48, ../sass/screen.sass */
+/* line 49, ../sass/screen.sass */
 ::-moz-selection {
   background-color: #d6dbe1;
   color: #2d353e;
   text-shadow: none;
 }
 
-/* line 53, ../sass/screen.sass */
+/* line 54, ../sass/screen.sass */
 ::selection {
   background-color: #d6dbe1;
   color: #2d353e;
@@ -292,8 +368,6 @@ button,
 select,
 textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -327,8 +401,6 @@ input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus,
 select:focus {
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
   box-shadow: none;
 }
 
@@ -370,23 +442,10 @@ input:-moz-placeholder {
   background-color: #e6e6e6;
   /* @alternate */
   background-color: #d9d9d9;
-  /* @alternate */
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #d9d9d9));
-  /* @alternate */
-  background-image: -webkit-linear-gradient(#ffffff, #d9d9d9);
-  /* @alternate */
-  background-image: -moz-linear-gradient(#ffffff, #d9d9d9);
-  /* @alternate */
-  background-image: -o-linear-gradient(#ffffff, #d9d9d9);
-  /* @alternate */
   background-image: linear-gradient(#ffffff, #d9d9d9);
   background-repeat: repeat-x;
   border: 1px solid #cccccc;
   border-bottom-color: #b3b3b3;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
   border-radius: 4px;
   cursor: pointer;
   *margin-left: 0.3em;
@@ -409,10 +468,6 @@ input[type="submit"].btn:hover {
 
 /* line 17, ../sass/_page.sass */
 .twangler-tweet {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 2px 0;
   margin-top: 5px;
@@ -449,10 +504,6 @@ input[type="submit"].btn:hover {
 /* line 45, ../sass/_page.sass */
 .cloud-item,
 .selected-item {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 2px 0;
   margin-top: 5px;
@@ -467,15 +518,6 @@ input[type="submit"].btn:hover {
 .cloud-item {
   /* @alternate */
   background-color: #040404;
-  /* @alternate */
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #1e1e1e), color-stop(100%, #040404));
-  /* @alternate */
-  background-image: -webkit-linear-gradient(#1e1e1e, #040404);
-  /* @alternate */
-  background-image: -moz-linear-gradient(#1e1e1e, #040404);
-  /* @alternate */
-  background-image: -o-linear-gradient(#1e1e1e, #040404);
-  /* @alternate */
   background-image: linear-gradient(#1e1e1e, #040404);
   background-repeat: repeat-x;
 }
@@ -493,10 +535,6 @@ input[type="submit"].btn:hover {
 /* line 69, ../sass/_page.sass */
 .header-input,
 .selected-input {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
   border-radius: 5px;
   margin-top: 3px;
 }
