@@ -7,9 +7,9 @@ goog.require('twangler.utils');
  * @constructor
  */
 twangler.Tweet = function (tweet, opt_parent_id) {
-  this.id = tweet['id'];
-  this.user = tweet['from_user'];
-  this.img = tweet['profile_image_url'];
+  this.id = tweet['user']['id'];
+  this.user = tweet['user']['screen_name'];
+  this.img = tweet['user']['profile_image_url'];
   this.time = tweet['created_at'];
   this.unix = Date.parse(this.time.replace(/( \+)/, ' UTC$1'));
   this.text = tweet['text'];

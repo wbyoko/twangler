@@ -65,17 +65,16 @@ twangler.Cloud.prototype.refresh = function () {
  * @param  {Object} data
  */
 twangler.Cloud.prototype.update = function (data) {
-
 	var tweet_text ='',
 		tweet,
 		word_list,
-		tweets = data['results'],
+		tweets = data['statuses'],
 		users = [],
 		i,
 		w;
 
 	if (goog.isDef(tweets)){
-		this.last_id = data['max_id'];
+		this.last_id = data['search_metadata']['max_id'];
 
 		for (i = tweets.length - 1; i >= 0; i--) {
 			tweet = new twangler.Tweet(tweets[i]);

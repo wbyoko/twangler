@@ -40,6 +40,17 @@
 	$js = fread($jsFile, filesize($jsFilepath));
 	fclose($jsFile);
 
+	$sha1Filepath = "www/js/sha1.js";
+	$sha1File = fopen($sha1Filepath, 'r');
+	$sha1 = fread($sha1File, filesize($sha1Filepath));
+	fclose($sha1File);
+
+	$codebirdFilepath = "www/js/codebird.js";
+	$codebirdFile = fopen($codebirdFilepath, 'r');
+	$codebird = fread($codebirdFile, filesize($codebirdFilepath));
+	fclose($codebirdFile);
+
+
 	//see http://en.wikipedia.org/wiki/Cron
 	if (parse_crontab('* 10-19 * * 0')) //Sunday Football
 		$defaultQuery = '#nfl';
@@ -78,6 +89,8 @@
 		<script><?php 
 			if ( $defaultQuery )
 				echo "dQ='$defaultQuery';";
+			echo $sha1; 
+			echo $codebird; 
 			echo $js; 
 		?></script>
 	</body>

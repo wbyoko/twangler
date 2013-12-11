@@ -16,22 +16,35 @@ twangler.twitter.utils.lang =  ((navigator.language) ? navigator.language : navi
 /**
  * @param  {string} query       [description]
  * @param  {Object} options     [description]
- * @param  {Function} callback_fn [description]
+ * @param  {function(*)} callback_fn [description]
  */
 twangler.twitter.utils.search = function (query, options, callback_fn) {
 
-  var request = new goog.net.Jsonp('http://search.twitter.com/search.json'),
-      payload = {
-        'lang' : twangler.twitter.utils.lang,
-        'result_type' : 'recent',
-        'rpp' : 100,
-        'q' : query
-      };
+    /** @type {Codebird} */
+    var cb = window['cb'];
 
-  goog.object.extend(payload, options);
+    var //request = new goog.net.Jsonp('http://search.twitter.com/search.json'),
+        payload = {
+            'lang' : twangler.twitter.utils.lang,
+            'result_type' : 'recent',
+            'rpp' : 100,
+            'q' : query
+        };
 
-  //console.log(payload);
-  request.send(payload, callback_fn);
+    goog.object.extend(payload, options);
+
+    //console.log(payload);
+
+    if (cb) {
+        cb.__call(
+            "search_tweets",
+            payload,
+            callback_fn
+            //true // this parameter required
+        );
+    }
+
+    //request.send(payload, callback_fn);
 };
 
 /**

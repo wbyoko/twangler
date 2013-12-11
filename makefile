@@ -9,10 +9,14 @@ deploy-local: html css compress-js-advanced
 	@cp tmp/css/*.css www/css
 	@mkdir -p www/js
 	@cp tmp/js/*.js www/js
+	@cp www-src/lib/*.js www/js
 
 deploy-local-plus: deploy-local
 	@rm -rf www/twangler.html
 	@php www-src/php/index.php >> www/twangler.html
+
+full: deploy-local-plus
+	@open www/twangler.html
 
 deploy-prod: deploy-local-plus
 	@scp www/twangler.html wbagayok@wbyoko.com:/home6/wbagayok/public_html/twangler/index.html
@@ -25,6 +29,7 @@ styling: html css js-compiled
 	@cp tmp/css/*.css www/css
 	@mkdir -p www/js
 	@cp tmp/js/*.js www/js
+	@cp www-src/lib/*.js www/js
 	@open www/index.n.html
 	@echo "Build Complete"
 
@@ -36,6 +41,7 @@ debug: html css compress-js-simple
 	@cp tmp/css/*.css www/css
 	@mkdir -p www/js
 	@cp tmp/js/*.js www/js
+	@cp www-src/lib/*.js www/js
 	@open www/index.d.html
 
 prod: html css compress-js-advanced
@@ -46,6 +52,7 @@ prod: html css compress-js-advanced
 	@cp tmp/css/*.css www/css
 	@mkdir -p www/js
 	@cp tmp/js/*.js www/js
+	@cp www-src/lib/*.js www/js
 	@open www/index.c.html
 	@echo "Build Complete"
 

@@ -60,12 +60,11 @@ twangler.Stream.prototype.refresh = function () {
  * @param  {Object} data
  */
 twangler.Stream.prototype.update = function (data) {
-
-	var tweets = data['results'],
+	var tweets = data['statuses'],
 		i;
 
 	if (goog.isDef(tweets)){
-		this.last_id = data['max_id'];
+		this.last_id = data['search_metadata']['max_id'];
 
 		for ( i = tweets.length - 1; i >= 0; i--) {
 			this.tweet_queue.push(new twangler.Tweet(tweets[i], this.id));

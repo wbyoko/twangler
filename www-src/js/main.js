@@ -12,8 +12,10 @@ goog.require('goog.fx');
 goog.require('goog.fx.dom');
 goog.require('goog.string');
 goog.require('goog.style');
+goog.require('goog.ui.Dialog');
+goog.require('goog.ui.ModalPopup');
 goog.require('goog.Uri');
-goog.require('mvc.Router');
+//goog.require('mvc.Router');
 goog.require('twangler.analytics');
 goog.require('twangler.Cloud');
 goog.require('twangler.Cloud.EventType');
@@ -38,14 +40,14 @@ twangler.FX_INTERVAL = 800;
 /* Major Data Definitions */
 
 
-/** @type {mvc.Router} */
-twangler.router = new mvc.Router();
+//** @type {mvc.Router} */
+//twangler.router = new mvc.Router();
 
 /** @type {string} */
 twangler.defaultQuery = goog.isDef(window['dQ']) ? window['dQ'] : '#news';
 
 /** @type {twangler.Cloud} */
-twangler.myCloud = new twangler.Cloud(twangler.defaultQuery);
+twangler.myCloud;
 
 /** @type {Array.<twangler.Stream>} */
 twangler.myStreams = [];
@@ -408,23 +410,9 @@ twangler.main = function () {
 
 	/* Init Cloud */
 
-	twangler.startStreams();
+	//twangler.startStreams();
 
 	goog.style.showElement(header_stream_clear_button, false);
-
-	/* Init Event Listeners */
-
-	goog.events.listen(
-		twangler.myCloud,
-		twangler.Cloud.EventType.CLOUD_UPDATED,
-		function (e) {
-			var cloud = e.target,
-				fragment = soy.renderAsFragment(twangler.templates.cloudView, {cloud : cloud });
-			goog.dom.removeChildren(cloud_div);
-			goog.dom.appendChild(cloud_div, /** @type {Node} */ (fragment));
-			twangler.numTwitterRequests++;
-		}
-	);
 
 	/* Document Keyboard Event Listener */
 
@@ -606,8 +594,73 @@ twangler.main = function () {
 			}
 		}
 	);
-	/* Init Router */
-	//twangler.router.route('*', twangler.parseToken);
+
+
+	var cb = new Codebird();
+
+	window['cb'] = cb;
+
+	cb.setConsumerKey("cBAIokgtjyLh8cMCDZNhIQ", "3Az14XDUsHYHHZ5XAY3SIBIzz8PinbaTWlq6F1UAxY");
+
+    var dialog1 = new goog.ui.Dialog();
+    dialog1.setContent('<input type="text" id="PINFIELD" placeholder="Enter Pin Here"/><br>');
+    dialog1.setTitle('Enter Pin');
+    dialog1.setButtonSet(goog.ui.Dialog.ButtonSet.createOkCancel());
+    goog.events.listen(dialog1, goog.ui.Dialog.EventType.SELECT, function(e) {
+		if (e.key == goog.ui.Dialog.DefaultButtonKeys.OK){
+			cb.__call(
+				"oauth_accessToken",
+				{'oauth_verifier': document.getElementById("PINFIELD").value},
+				function (reply) {
+					// store the authenticated token, which may be different from the request token (!)
+					cb.setToken(reply['oauth_token'], reply['oauth_token_secret']);
+
+					// if you need to persist the login after page reload,
+					// consider storing the token in a cookie or HTML5 local storage
+					twangler.myCloud = new twangler.Cloud(twangler.defaultQuery);
+					twangler.startStreams();
+
+					/* Init Event Listeners */
+
+					goog.events.listen(
+						twangler.myCloud,
+						twangler.Cloud.EventType.CLOUD_UPDATED,
+						function (e) {
+							var cloud = e.target,
+								fragment = soy.renderAsFragment(twangler.templates.cloudView, {cloud : cloud });
+							goog.dom.removeChildren(cloud_div);
+							goog.dom.appendChild(cloud_div, /** @type {Node} */ (fragment));
+							twangler.numTwitterRequests++;
+						}
+					);
+
+					//cb.__call("statuses_update", {"status": "Whohoo, I just tweeted using codebird!"}, function (reply) {});
+				}
+			);
+		}
+    });
+
+    cb.__call(
+    	"oauth_requestToken",
+    	{'oauth_callback': "oob"},
+    	function (reply) {
+        	// stores it
+        	cb.setToken(reply['oauth_token'], reply['oauth_token_secret']);
+
+        	// gets the authorize screen URL
+        	cb.__call(
+            	"oauth_authorize",
+            	{},
+            	function (auth_url) {
+            		console.log("authing");
+                	window['codebird_auth'] = window.open(auth_url);
+            	}
+        	);
+    	}
+    );
+
+
+    dialog1.setVisible(true);
 	
 	twangler.analytics.trackPage();
 	twangler.analytics.gaInit();
