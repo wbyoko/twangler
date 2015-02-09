@@ -40,11 +40,6 @@
 	$js = fread($jsFile, filesize($jsFilepath));
 	fclose($jsFile);
 
-	$sha1Filepath = "www/js/sha1.js";
-	$sha1File = fopen($sha1Filepath, 'r');
-	$sha1 = fread($sha1File, filesize($sha1Filepath));
-	fclose($sha1File);
-
 	$codebirdFilepath = "www/js/codebird.js";
 	$codebirdFile = fopen($codebirdFilepath, 'r');
 	$codebird = fread($codebirdFile, filesize($codebirdFilepath));
