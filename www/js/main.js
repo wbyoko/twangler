@@ -30786,7 +30786,7 @@ twangler.Cloud.prototype.stop = function () {
 twangler.Cloud.prototype.start = function () {
 	var self = this;
 	this.refresh();
-	this.interval_id = setInterval( function() { self.refresh(); }, 15000);
+	this.interval_id = setInterval( function() { self.refresh(); }, 45000);
 };
 
 twangler.Cloud.prototype.refresh = function () {
@@ -30804,9 +30804,6 @@ twangler.Cloud.prototype.refresh = function () {
  * @param  {Object} data
  */
 twangler.Cloud.prototype.update = function (data) {
-
-	console.log(data);
-	
 	var tweet_text ='',
 		tweet,
 		word_list,
@@ -35362,7 +35359,7 @@ twangler.Stream.prototype.start = function () {
 	var self = this;
 	this.stop();
 	this.refresh();
-	this.interval_id = setInterval( function() { self.refresh(); }, 10000);
+	this.interval_id = setInterval( function() { self.refresh(); }, 30000);
 };
 
 twangler.Stream.prototype.stop = function () {
@@ -35385,9 +35382,6 @@ twangler.Stream.prototype.refresh = function () {
  * @param  {Object} data
  */
 twangler.Stream.prototype.update = function (data) {
-
-	console.log(data);
-	
 	var tweets = data['statuses'],
 		i;
 
@@ -35442,7 +35436,7 @@ goog.require('soy');
  * @const
  * @type {number}
  */
-twangler.FX_INTERVAL = 800;
+twangler.FX_INTERVAL = 2400;
 
 
 /* Major Data Definitions */
@@ -36007,8 +36001,8 @@ twangler.main = function () {
 	var cb = new Codebird();
 
 	window['cb'] = cb;
-
-	cb.setConsumerKey("cBAIokgtjyLh8cMCDZNhIQ", "3Az14XDUsHYHHZ5XAY3SIBIzz8PinbaTWlq6F1UAxY");
+	
+	cb.setConsumerKey("xPCJi2TWfIHcpLTByVHGhLOl2", "EYqm3xJNxaNegu7n9Xc0WfWvlebfMPPZy80VlYeH1rg273QbwI");
 
     var dialog1 = new goog.ui.Dialog();
     dialog1.setContent('<input type="text" id="PINFIELD" placeholder="Enter Pin Here"/><br>');
