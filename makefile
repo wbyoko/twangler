@@ -1,5 +1,5 @@
 #compress-js-simple compress-js-advanced deploy-local deploy-prod
-all: deploy-prod
+all: full
 
 deploy-local: html css compress-js-advanced
 	@echo "Copying temp files into www folder"
@@ -17,9 +17,6 @@ deploy-local-plus: deploy-local
 
 full: deploy-local-plus
 	@open www/twangler.html
-
-deploy-prod: deploy-local-plus
-	@scp www/twangler.html wbagayok@wbyoko.com:/home6/wbagayok/public_html/twangler/index.html
 
 styling: html css js-compiled
 	@echo "Copying temp files into www folder"
