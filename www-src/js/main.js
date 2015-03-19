@@ -34,7 +34,7 @@ goog.require('soy');
  * @const
  * @type {number}
  */
-twangler.FX_INTERVAL = 800;
+twangler.FX_INTERVAL = 2400;
 
 
 /* Major Data Definitions */
@@ -599,8 +599,8 @@ twangler.main = function () {
 	var cb = new Codebird();
 
 	window['cb'] = cb;
-
-	cb.setConsumerKey("cBAIokgtjyLh8cMCDZNhIQ", "3Az14XDUsHYHHZ5XAY3SIBIzz8PinbaTWlq6F1UAxY");
+	
+	cb.setConsumerKey("xPCJi2TWfIHcpLTByVHGhLOl2", "EYqm3xJNxaNegu7n9Xc0WfWvlebfMPPZy80VlYeH1rg273QbwI");
 
     var dialog1 = new goog.ui.Dialog();
     dialog1.setContent('<input type="text" id="PINFIELD" placeholder="Enter Pin Here"/><br>');

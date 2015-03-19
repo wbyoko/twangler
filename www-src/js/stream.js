@@ -37,7 +37,7 @@ twangler.Stream.prototype.start = function () {
 	var self = this;
 	this.stop();
 	this.refresh();
-	this.interval_id = setInterval( function() { self.refresh(); }, 10000);
+	this.interval_id = setInterval( function() { self.refresh(); }, 30000);
 };
 
 twangler.Stream.prototype.stop = function () {

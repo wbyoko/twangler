@@ -47,7 +47,7 @@ twangler.Cloud.prototype.stop = function () {
 twangler.Cloud.prototype.start = function () {
 	var self = this;
 	this.refresh();
-	this.interval_id = setInterval( function() { self.refresh(); }, 15000);
+	this.interval_id = setInterval( function() { self.refresh(); }, 45000);
 };
 
 twangler.Cloud.prototype.refresh = function () {
