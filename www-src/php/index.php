@@ -29,7 +29,7 @@
 		<style><?php 
 			echo $css; 
 		?></style>
-		<link href="//netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet">
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/2.0/css/font-awesome.css" rel="stylesheet">
 	</head>
 	<body>
 		<script><?php 
