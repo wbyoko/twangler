@@ -21,14 +21,14 @@ Live Sports / Developing News Stories / Major Broadcast Events are a great exper
 * Pause in stream item column pauses the twitter stream.
 * Bin button clears the twitter stream. 
 
-* Clicking stream item in stream column removes that strean item.
+* Clicking stream item in stream column removes that stream item.
 
 * Clicking twitter icon or name add that user as a stream item.
 * Clicking hashtags add that hashtag as a stream item.
 * Clicking username or hashtag that is already added as stream item will open item as a link in new window.
 
 
-#Stack
+## Stack
 * Closure Tools
 * Codebird
 * Make
