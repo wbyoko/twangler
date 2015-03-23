@@ -126,36 +126,41 @@ twangler.startStreams = function () {
 					tweet = twangler.myTweets.splice(nextTweet,1)[0];
 				}
 
-				if (goog.isDef(tweet))
-					twangler.displayTweet(tweet);
+				if (goog.isDef(tweet)) twangler.displayTweet(tweet);
 
 				waitingTweets = twangler.myTweets.length;
 
 				if (waitingTweets > tweetCutoff)
-					//if (twangler.twitter.utils.dateDifference(twangler.myTweets[tweetCutoff].time) > (tweetCutoff * 1000))
-						twangler.myTweets.splice(tweetCutoff,waitingTweets - tweetCutoff);
+					twangler.myTweets.splice(tweetCutoff,waitingTweets - tweetCutoff);
 			}
 		}, twangler.FX_INTERVAL
 	);
 	twangler.streamPaused = false;
-	/*
+	
 	twangler.maintenanceIntervalId = setInterval(
 		function() {
-			// <b class="{css tweet-date}" data-time="{$tweet.unix}">{$str_time}</b>
-			var tweet_times = goog.dom.getElementsByClass(goog.getCssName('tweet-date')),
-				tweet_time;
 
-			for (var i = tweet_times.length - 1; i >= 0; i--) {
+			var tweet_times, tweet_time, new_time, i, tweets, tweet, MAX_TWEETS = 200;
+
+			tweet_times = goog.dom.getElementsByClass(goog.getCssName('tweet-date'));
+			for (i = 0; i < tweet_times.length && i < MAX_TWEETS; i++) {
 				tweet_time = tweet_times[i];
+				new_time = twangler.twitter.utils.parseTime(tweet_time.getAttribute('data-time'));
+				tweet_time.innerHTML = new_time;
 			}
-		}, twangler.FX_INTERVAL * 5
+
+			tweets = goog.dom.getElementsByClass(goog.getCssName('twangler-tweet'));
+			for (i = tweets.length-1; i >= MAX_TWEETS; i--) {
+				tweet = tweets[i];
+				tweet.parentNode.removeChild(tweet);
+			}
+		}, twangler.FX_INTERVAL * 2
 	);
-	// */
 };
 
 twangler.stopStreams = function () {
 	clearInterval(twangler.tweetIntervalId);
-	//clearInterval(twangler.maintenanceIntervalId);
+	clearInterval(twangler.maintenanceIntervalId);
 	for (var i = twangler.myStreams.length - 1; i >= 0; i--) {
 		twangler.myStreams[i].stop();
 	}
