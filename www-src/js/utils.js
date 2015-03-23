@@ -65,7 +65,7 @@ twangler.utils.linkTags = function(text) {
 	return text.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
 		var function_path = 'onClick="return asp(\'' + t + '\');"',
 			tag = t.replace("#", "%23");
-		t = t.link("http://search.twitter.com/search?q=" + tag);
+		t = t.link("https://twitter.com/search?q=" + tag);
 		t = t.replace('href="', function_path + ' target="_blank" href="');
 		return t;
 	});
